@@ -1,1 +1,2 @@
 include 'zerofx-core'
+include 'zerofx-sample-app'
