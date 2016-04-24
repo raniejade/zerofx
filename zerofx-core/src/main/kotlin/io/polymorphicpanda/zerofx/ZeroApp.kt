@@ -2,6 +2,7 @@ package io.polymorphicpanda.zerofx
 
 import io.polymorphicpanda.zerofx.component.Component
 import javafx.event.EventHandler
+import javafx.scene.Group
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
@@ -24,8 +25,13 @@ abstract class ZeroApp(val stage: Stage) {
         }
 
         instance = main.primaryConstructor!!.call(this).apply {
-            this.init()
-            stage.scene = createScene(this.view.root)
+            init()
+            val root = when (view.root) {
+                is Parent -> view.root as Parent
+                else -> Group(view.root)
+            }
+            contentInit()
+            stage.scene = createScene(root)
         }
     }
 

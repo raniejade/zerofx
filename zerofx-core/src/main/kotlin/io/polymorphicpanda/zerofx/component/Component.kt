@@ -15,6 +15,10 @@ abstract class Component(val app: ZeroApp) {
     internal val components = LinkedList<Component>()
 
     open fun init() {
+        view.init()
+    }
+
+    open fun contentInit() {
         components.forEach {
             it.init()
         }
@@ -22,6 +26,7 @@ abstract class Component(val app: ZeroApp) {
 
 
     open fun destroy() {
+        view.destroy()
         components.forEach {
             it.destroy()
         }
@@ -29,7 +34,7 @@ abstract class Component(val app: ZeroApp) {
 
     internal fun <T: Component> create(kClass: KClass<T>): T {
         return kClass.primaryConstructor!!.call(app).apply {
-            components.add(this)
+            this@Component.components.add(this)
         }
     }
 }
