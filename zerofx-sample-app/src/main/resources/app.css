@@ -1,3 +1,27 @@
 .main-component {
     -fx-padding: 10px;
+    -fx-font-family: "Droid Sans";
+    -fx-font-smoothing-type: lcd;
+}
+
+.main-component .todo-list-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bolder;
+    -fx-text-fill: slategray;
+}
+
+.todo-details > .content > .title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bolder;
+}
+
+
+.todo-details > .content > .details-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bolder;
+    -fx-text-fill: slategray;
+}
+
+.todo-details > .content > .details .content {
+    -fx-padding: 10px;
 }

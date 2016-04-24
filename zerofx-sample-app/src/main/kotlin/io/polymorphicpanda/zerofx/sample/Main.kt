@@ -18,7 +18,7 @@ class Main: Application() {
             override val main = TodoAppComponent::class
 
             override fun createScene(root: Parent): Scene {
-                return Scene(root, 400.0, 300.0).apply {
+                return Scene(root, 600.0, 300.0).apply {
                     stylesheets.add(Main::class.java.classLoader.getResource("app.css").toExternalForm())
                 }
             }

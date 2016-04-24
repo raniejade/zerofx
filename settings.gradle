@@ -1,2 +1,3 @@
 include 'zerofx-core'
+include 'zerofx-view-helpers'
 include 'zerofx-sample-app'

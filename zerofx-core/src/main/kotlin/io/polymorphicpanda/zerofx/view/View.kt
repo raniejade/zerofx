@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 abstract class View<T: Component>(val component: T) {
     abstract val root: Parent
 
-    protected fun<K: Component> create(klass: KClass<K>): K {
+    protected fun <K: Component> create(klass: KClass<K>): K {
         return component.create(klass)
     }
 }

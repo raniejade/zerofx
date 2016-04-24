@@ -9,10 +9,7 @@ import java.util.*
 object TodoListService {
     private var ids = 0;
 
-    private val todos = LinkedList<Todo>(listOf(
-            Todo(++ids, "Sample #1"),
-            Todo(++ids, "Sample #2")
-    ))
+    private val todos = LinkedList<Todo>()
 
     fun create(description: String): Todo {
         return Todo(++ids, description).apply {

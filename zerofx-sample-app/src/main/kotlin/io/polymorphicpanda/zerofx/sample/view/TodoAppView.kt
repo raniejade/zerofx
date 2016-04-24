@@ -4,13 +4,19 @@ import io.polymorphicpanda.zerofx.sample.component.TodoAppComponent
 import io.polymorphicpanda.zerofx.sample.component.TodoDetailsComponent
 import io.polymorphicpanda.zerofx.sample.domain.Todo
 import io.polymorphicpanda.zerofx.view.View
-import io.polymorphicpanda.zerofx.view.helpers.*
+import io.polymorphicpanda.zerofx.view.helpers.children
+import io.polymorphicpanda.zerofx.view.helpers.styleClass
+import javafx.beans.binding.Bindings
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.*
-import javafx.scene.layout.*
+import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 import javafx.util.Callback
+import java.util.concurrent.Callable
 
 /**
  * @author Ranie Jade Ramiso
@@ -19,8 +25,9 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
     override val root by lazy(LazyThreadSafetyMode.NONE) {
         BorderPane().apply {
             styleClass("main-component")
+
             left = VBox().apply {
-                margin(this, Insets(5.0))
+                BorderPane.setMargin(this, Insets(5.0))
                 alignment = Pos.CENTER_LEFT
                 spacing = 5.0
                 isFillWidth = true
@@ -30,43 +37,41 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
                         spacing = 5.0
                         children {
                             + TextField().apply {
+
                                 textProperty().bindBidirectional(component.newTodoDescription)
                                 promptText = "Create new todo"
-                                hgrow(this, Priority.ALWAYS)
+                                HBox.setHgrow(this, Priority.ALWAYS)
                             }
 
 
-                            + Button("Add"). apply {
-                                hgrow(this, Priority.ALWAYS)
-                                disableProperty().bind(component.newTodoDescription.isEmpty)
+                            + Button("+").apply {
+                                HBox.setHgrow(this, Priority.ALWAYS)
+                                val blank = Bindings.createBooleanBinding(Callable {
+                                    component.newTodoDescription.get().isNullOrBlank()
+                                }, component.newTodoDescription)
+                                disableProperty().bind(blank)
                                 onAction = EventHandler {
                                     component.addTodo()
                                 }
                             }
                         }
                     }
-                    + Label("Todo List")
+                    + Label("Todo List").apply {
+                        styleClass("todo-list-label")
+                    }
                     + createListView().apply {
-                        vgrow(this, Priority.ALWAYS)
+                        VBox.setVgrow(this, Priority.ALWAYS)
                     }
                 }
             }
 
-            center = StackPane().apply {
-                children {
-                    + create(TodoDetailsComponent::class).apply {
-                        todo.bind(component.selected)
+            val details = create(TodoDetailsComponent::class).apply {
+                todo.bind(component.selected)
+            }
 
-                        // we need to do this?
-                        var once = false
-                        component.selected.addListener({ obs, old, selected ->
-                            if (!once) {
-                                todo
-                                once = true
-                            }
-                        })
-                    }
-                }
+            details.view.root.apply {
+                BorderPane.setMargin(this, Insets(5.0))
+                center = this
             }
         }
     }
@@ -74,14 +79,13 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
     private fun createListView(): ListView<Todo> {
         return ListView<Todo>().apply {
             styleClass("todos")
-            isFocusTraversable = false
             cellFactory = Callback {
                 object: ListCell<Todo>() {
                     override fun updateItem(item: Todo?, empty: Boolean) {
                         super.updateItem(item, empty)
 
                         if (!empty && item != null) {
-                            text = item.description
+                            text = item.description.get()
                         }
                     }
                 }

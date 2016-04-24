@@ -6,7 +6,10 @@ import io.polymorphicpanda.zerofx.view.View
 import io.polymorphicpanda.zerofx.view.helpers.children
 import io.polymorphicpanda.zerofx.view.helpers.styleClass
 import javafx.beans.property.SimpleObjectProperty
+import javafx.geometry.Pos
 import javafx.scene.control.Label
+import javafx.scene.control.TextArea
+import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 
 /**
@@ -18,23 +21,66 @@ class TodoDetailsView(component: TodoDetailsComponent): View<TodoDetailsComponen
             override fun invalidated() {
                 super.invalidated()
 
-                if (get() != null) {
-                    title.text = get().description
+                val todo = get()
+                if (todo != null) {
+                    title.text = todo.description.get()
+                    details.text = todo.details.get()
                 }
             }
         }
     }
 
     val title by lazy(LazyThreadSafetyMode.NONE) {
-        Label()
+        Label("<Empty>")
+    }
+
+    val details by lazy(LazyThreadSafetyMode.NONE) {
+        TextArea()
+    }
+
+    val content by lazy(LazyThreadSafetyMode.NONE) {
+        VBox()
+    }
+
+    val empty by lazy(LazyThreadSafetyMode.NONE) {
+        VBox()
     }
 
     override val root by lazy(LazyThreadSafetyMode.NONE) {
-        VBox().apply {
+        StackPane().apply {
             styleClass("todo-details")
             todo.bind(component.todo)
             children {
-                + title
+                + content.apply {
+                    styleClass("content")
+                    visibleProperty().bind(todo.isNotNull)
+                    managedProperty().bind(visibleProperty())
+                    spacing = 10.0
+                    children {
+                        + title.apply {
+                            styleClass("title")
+                        }
+                        + Label("Details").apply {
+                            styleClass("details-label")
+                        }
+                        + details.apply {
+                            styleClass("details")
+                            isFocusTraversable = false
+                            prefRowCount = 5
+                            promptText = "Add some details"
+                        }
+                    }
+                }
+
+                + empty.apply {
+                    styleClass("empty")
+                    visibleProperty().bind(todo.isNull)
+                    managedProperty().bind(visibleProperty())
+                    alignment = Pos.CENTER
+                    children {
+                        + Label("Nothing to show")
+                    }
+                }
             }
         }
     }

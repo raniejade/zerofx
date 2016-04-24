@@ -3,7 +3,7 @@ package io.polymorphicpanda.zerofx.view.helpers
 import javafx.scene.Node
 
 fun Node.styleClass(vararg styleClass: String) {
-    this.styleClass.setAll(*styleClass)
+    this.styleClass.addAll(*styleClass)
 }
 
 fun Node.addStyleClass(styleClass: String) {
