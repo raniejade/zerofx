@@ -1,15 +1,18 @@
 package io.polymorphicpanda.zerofx.template
 
 import io.polymorphicpanda.zerofx.component.Component
-import io.polymorphicpanda.zerofx.component.ViewBindings
 import javafx.scene.Node
 import kotlin.reflect.KClass
 
 /**
  * @author Ranie Jade Ramiso
  */
-abstract class Template<T: Component, K: ViewBindings<T>>(val component: T, val bindings: K) {
+abstract class Template<T: Component, K: Template.Binder<T>>(val component: T, val bindings: K) {
     abstract val root: Node
+
+    interface Binder<T: Component> {
+    }
+
 
     open fun init() { }
     open fun destroy() { }

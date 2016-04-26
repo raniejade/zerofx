@@ -6,6 +6,7 @@ import io.polymorphicpanda.zerofx.property.property
 import io.polymorphicpanda.zerofx.sample.domain.Todo
 import io.polymorphicpanda.zerofx.sample.service.TodoListService
 import io.polymorphicpanda.zerofx.sample.template.TodoAppTemplate
+import io.polymorphicpanda.zerofx.template.Template
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 
@@ -13,7 +14,7 @@ import javafx.collections.FXCollections
  * @author Ranie Jade Ramiso
  */
 class TodoAppComponent(app: ZeroApp): Component(app) {
-    interface Bindings: io.polymorphicpanda.zerofx.component.ViewBindings<TodoAppComponent> {
+    interface Bindings: Template.Binder<TodoAppComponent> {
         fun descriptionProperty(): StringProperty
         var description: String
 

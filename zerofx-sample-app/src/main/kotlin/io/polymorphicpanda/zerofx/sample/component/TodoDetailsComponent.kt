@@ -2,10 +2,10 @@ package io.polymorphicpanda.zerofx.sample.component
 
 import io.polymorphicpanda.zerofx.ZeroApp
 import io.polymorphicpanda.zerofx.component.Component
-import io.polymorphicpanda.zerofx.component.ViewBindings
 import io.polymorphicpanda.zerofx.property.property
 import io.polymorphicpanda.zerofx.sample.domain.Todo
 import io.polymorphicpanda.zerofx.sample.template.TodoDetailsTemplate
+import io.polymorphicpanda.zerofx.template.Template
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
 
@@ -13,7 +13,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper
  * @author Ranie Jade Ramiso
  */
 class TodoDetailsComponent(app: ZeroApp): Component(app) {
-    interface Bindings: ViewBindings<TodoDetailsComponent> {
+    interface Bindings: Template.Binder<TodoDetailsComponent> {
         fun todoProperty(): ReadOnlyObjectProperty<Todo>
         val todo: Todo
     }
