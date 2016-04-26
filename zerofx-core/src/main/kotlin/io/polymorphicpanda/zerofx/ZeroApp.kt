@@ -26,9 +26,9 @@ abstract class ZeroApp(val stage: Stage) {
 
         instance = main.primaryConstructor!!.call(this).apply {
             init()
-            val root = when (view.root) {
-                is Parent -> view.root as Parent
-                else -> Group(view.root)
+            val root = when (template.root) {
+                is Parent -> template.root as Parent
+                else -> Group(template.root)
             }
             contentInit()
             stage.scene = createScene(root)

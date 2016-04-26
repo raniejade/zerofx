@@ -1,7 +1,7 @@
 package io.polymorphicpanda.zerofx.component
 
 import io.polymorphicpanda.zerofx.ZeroApp
-import io.polymorphicpanda.zerofx.view.View
+import io.polymorphicpanda.zerofx.template.Template
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.primaryConstructor
@@ -10,12 +10,14 @@ import kotlin.reflect.primaryConstructor
  * @author Ranie Jade Ramiso
  */
 abstract class Component(val app: ZeroApp) {
-    abstract val view: View<*>
+    val template: Template<*, *> by lazy {
+        createTemplate()
+    }
 
     internal val components = LinkedList<Component>()
 
     open fun init() {
-        view.init()
+        template.init()
     }
 
     open fun contentInit() {
@@ -26,11 +28,13 @@ abstract class Component(val app: ZeroApp) {
 
 
     open fun destroy() {
-        view.destroy()
+        template.destroy()
         components.forEach {
             it.destroy()
         }
     }
+
+    protected abstract fun createTemplate(): Template<*, *>
 
     internal fun <T: Component> create(kClass: KClass<T>): T {
         return kClass.primaryConstructor!!.call(app).apply {

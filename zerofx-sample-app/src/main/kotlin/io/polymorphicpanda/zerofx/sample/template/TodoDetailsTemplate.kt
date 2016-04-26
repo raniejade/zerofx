@@ -1,9 +1,9 @@
-package io.polymorphicpanda.zerofx.sample.view
+package io.polymorphicpanda.zerofx.sample.template
 
 import io.polymorphicpanda.zerofx.sample.component.TodoDetailsComponent
 import io.polymorphicpanda.zerofx.sample.domain.Todo
-import io.polymorphicpanda.zerofx.view.View
-import io.polymorphicpanda.zerofx.view.helpers.*
+import io.polymorphicpanda.zerofx.template.Template
+import io.polymorphicpanda.zerofx.template.helpers.*
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ChangeListener
 import javafx.geometry.Pos
@@ -11,7 +11,9 @@ import javafx.geometry.Pos
 /**
  * @author Ranie Jade Ramiso
  */
-class TodoDetailsView(component: TodoDetailsComponent): View<TodoDetailsComponent>(component) {
+class TodoDetailsTemplate(component: TodoDetailsComponent,
+                          bindings: TodoDetailsComponent.Bindings)
+    : Template<TodoDetailsComponent, TodoDetailsComponent.Bindings>(component, bindings) {
     val listener = ChangeListener<Todo> { obs, old, todo ->
         if (todo != null) {
             description.set(todo.description.get())
@@ -28,7 +30,7 @@ class TodoDetailsView(component: TodoDetailsComponent): View<TodoDetailsComponen
 
             vbox {
                 styleClass("content")
-                visibleProperty().bind(component.todo.isNotNull)
+                visibleProperty().bind(bindings.todoProperty().isNotNull)
                 managedProperty().bind(visibleProperty())
                 spacing = 10.0
 
@@ -52,7 +54,7 @@ class TodoDetailsView(component: TodoDetailsComponent): View<TodoDetailsComponen
             vbox {
                 styleClass("empty")
                 alignment = Pos.CENTER
-                visibleProperty().bind(component.todo.isNull)
+                visibleProperty().bind(bindings.todoProperty().isNull)
                 managedProperty().bind(visibleProperty())
 
                 label {
@@ -64,11 +66,11 @@ class TodoDetailsView(component: TodoDetailsComponent): View<TodoDetailsComponen
 
     override fun init() {
         super.init()
-        component.todo.addListener(listener)
+        bindings.todoProperty().addListener(listener)
     }
 
     override fun destroy() {
         super.destroy()
-        component.todo.removeListener(listener)
+        bindings.todoProperty().removeListener(listener)
     }
 }

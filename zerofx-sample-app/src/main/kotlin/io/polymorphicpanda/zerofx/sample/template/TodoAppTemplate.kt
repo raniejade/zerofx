@@ -1,10 +1,10 @@
-package io.polymorphicpanda.zerofx.sample.view
+package io.polymorphicpanda.zerofx.sample.template
 
 import io.polymorphicpanda.zerofx.sample.component.TodoAppComponent
 import io.polymorphicpanda.zerofx.sample.component.TodoDetailsComponent
 import io.polymorphicpanda.zerofx.sample.domain.Todo
-import io.polymorphicpanda.zerofx.view.View
-import io.polymorphicpanda.zerofx.view.helpers.*
+import io.polymorphicpanda.zerofx.template.Template
+import io.polymorphicpanda.zerofx.template.helpers.*
 import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.geometry.Pos
@@ -16,7 +16,9 @@ import java.util.concurrent.Callable
 /**
  * @author Ranie Jade Ramiso
  */
-class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component) {
+class TodoAppTemplate(component: TodoAppComponent,
+                      bindings: TodoAppComponent.Bindings)
+    : Template<TodoAppComponent, TodoAppComponent.Bindings>(component, bindings) {
     override val root by builder {
         borderPane {
             styleClass("main-component")
@@ -34,7 +36,7 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
                         textField {
                             promptText = "Create new todo"
                             hgrow = Priority.ALWAYS
-                            textProperty().bindBidirectional(component.newTodoDescription)
+                            textProperty().bindBidirectional(bindings.descriptionProperty())
                         }
 
                         button {
@@ -42,20 +44,18 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
                             hgrow = Priority.ALWAYS
 
                             val blank = Bindings.createBooleanBinding(Callable {
-                                component.newTodoDescription.get().isNullOrBlank()
-                            }, component.newTodoDescription)
+                                bindings.description.isNullOrBlank()
+                            }, bindings.descriptionProperty())
 
                             disableProperty().bind(blank)
 
-                            onAction {
-                                component.addTodo()
+                            action {
+                                bindings.addTodo()
                             }
                         }
                     }
 
-                    label {
-                        text = "Todo List"
-                    }
+                    label("Todo List")
 
                     listView<Todo> {
                         styleClass("todos")
@@ -71,16 +71,16 @@ class TodoAppView(component: TodoAppComponent): View<TodoAppComponent>(component
                             }
                         }
 
-                        component.selected.bind(selectedItemProperty())
-                        itemsProperty().bind(component.todos)
+                        bindings.selectedProperty().bind(selectedItemProperty())
+                        itemsProperty().bind(bindings.todosProperty())
                     }
                 }
             }
 
             center {
-                component(create(TodoDetailsComponent::class)) {
+                component(TodoDetailsComponent::class) {
                     borderPaneMargin = Insets(5.0)
-                    this.component.todo.bind(component.selected)
+                    this.component.todoProperty().bind(bindings.selectedProperty())
                 }
             }
         }

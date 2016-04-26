@@ -1,4 +1,4 @@
-package io.polymorphicpanda.zerofx.view.helpers
+package io.polymorphicpanda.zerofx.template.helpers
 
 import javafx.geometry.Insets
 import javafx.geometry.Pos

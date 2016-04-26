@@ -1,4 +1,4 @@
-package io.polymorphicpanda.zerofx.view.helpers
+package io.polymorphicpanda.zerofx.template.helpers
 
 import javafx.collections.ObservableList
 import javafx.scene.control.ListCell

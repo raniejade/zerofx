@@ -1,4 +1,4 @@
-package io.polymorphicpanda.zerofx.view.helpers
+package io.polymorphicpanda.zerofx.template.helpers
 
 import javafx.scene.Node
 
@@ -11,6 +11,11 @@ open class Builder<T: Node>(val node: T) {
         styleClass().addAll(classes)
     }
 
+    fun focusedProperty() = node.focusedProperty()
+    val focused = focusedProperty().get()
+
+    fun hoveredProperty() = node.hoverProperty()
+    val hovered = hoveredProperty().get()
 
     fun focusTraversableProperty() = node.focusTraversableProperty()
     var focusTraversable: Boolean
@@ -46,4 +51,34 @@ open class Builder<T: Node>(val node: T) {
         set(value) {
             idProperty().set(value)
         }
+
+    fun Node.styleClass(vararg styleClass: String) {
+        this.styleClass.addAll(*styleClass)
+    }
+
+    fun Node.addStyleClass(styleClass: String) {
+        this.styleClass.apply {
+            if (!contains(styleClass)) {
+                add(styleClass)
+            }
+        }
+    }
+
+    fun Node.hasStyleClass(vararg styleClass: String): Boolean {
+        return this.styleClass.containsAll(listOf(*styleClass))
+    }
+
+    fun Node.removeStyleClass(styleClass: String) {
+        this.styleClass.removeAll {
+            it == styleClass
+        }
+    }
+
+    fun Node.toggleStyleClass(styleClass: String) {
+        if (hasStyleClass(styleClass)) {
+            removeStyleClass(styleClass)
+        } else {
+            addStyleClass(styleClass)
+        }
+    }
 }

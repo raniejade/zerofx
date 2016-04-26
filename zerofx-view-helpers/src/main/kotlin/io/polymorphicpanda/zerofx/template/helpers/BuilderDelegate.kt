@@ -1,4 +1,4 @@
-package io.polymorphicpanda.zerofx.view.helpers
+package io.polymorphicpanda.zerofx.template.helpers
 
 import javafx.scene.Node
 import javafx.scene.layout.Pane
