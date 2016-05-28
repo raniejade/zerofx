@@ -6,5 +6,5 @@ import javafx.scene.Node
 /**
  * @author Ranie Jade Ramiso
  */
-class ComponentBuilder<T: Component>(val component: T): Builder<Node>(component.template.root) {
+class ComponentBuilder<T: Component<*>>(val component: T): Builder<Node>(component.template.root) {
 }

@@ -1,23 +1,21 @@
 package io.polymorphicpanda.zerofx.template
 
+import io.polymorphicpanda.zerofx.ZeroApp
 import io.polymorphicpanda.zerofx.component.Component
 import javafx.scene.Node
-import kotlin.reflect.KClass
+import java.util.*
 
 /**
  * @author Ranie Jade Ramiso
  */
-abstract class Template<T: Component, K: Template.Binder<T>>(val component: T, val bindings: K) {
+abstract class Template(val app: ZeroApp) {
     abstract val root: Node
+    internal  val components = LinkedList<Component<*>>()
 
-    interface Binder<T: Component> {
+    open fun init() {
     }
 
-
-    open fun init() { }
-    open fun destroy() { }
-
-    fun <K: Component> create(klass: KClass<K>): K {
-        return component.create(klass)
+    open fun destroy() {
+        components.forEach { it.destroy() }
     }
 }

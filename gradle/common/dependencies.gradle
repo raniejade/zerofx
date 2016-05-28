@@ -5,6 +5,10 @@ dependencyManagement {
     dependencies {
         dependency "com.natpryce:hamkrest:1.1.0.0"
 
+        dependency "com.github.thomasnield:rxkotlinfx:0.0.5"
+
+        dependency "io.reactivex:rxjava:1.1.5"
+
         dependencySet(group: 'org.jetbrains.kotlin', version: '1.0.1') {
             entry 'kotlin-stdlib'
             entry 'kotlin-reflect'

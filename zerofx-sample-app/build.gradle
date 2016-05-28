@@ -5,4 +5,5 @@ apply from: "$rootDir/gradle/common/kotlin.gradle"
 dependencies {
     compile project(':zerofx-core')
     compile project(':zerofx-view-helpers')
+    compile "com.github.thomasnield:rxkotlinfx"
 }

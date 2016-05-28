@@ -14,8 +14,8 @@ open class PaneBuilder<T: Pane>(pane: T): Builder<T>(pane) {
         node.children.add(child)
     }
 
-    fun <T: Component> Template<*, *>.component(component: KClass<T>, block: ComponentBuilder<T>.() -> Unit): T {
-        return create(component).apply {
+    fun <T: Component<*>> Template.component(component: KClass<T>, block: ComponentBuilder<T>.() -> Unit): T {
+        return app.create(component, this) {
             val builder = ComponentBuilder(this)
             block.invoke(builder)
             add(builder.node)

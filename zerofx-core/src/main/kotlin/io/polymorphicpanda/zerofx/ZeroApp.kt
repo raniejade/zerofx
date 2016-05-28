@@ -1,6 +1,7 @@
 package io.polymorphicpanda.zerofx
 
 import io.polymorphicpanda.zerofx.component.Component
+import io.polymorphicpanda.zerofx.template.Template
 import javafx.event.EventHandler
 import javafx.scene.Group
 import javafx.scene.Parent
@@ -14,9 +15,9 @@ import kotlin.reflect.primaryConstructor
  * @author Ranie Jade Ramiso
  */
 abstract class ZeroApp(val stage: Stage) {
-    abstract val main: KClass<out Component>
+    abstract val main: KClass<out Component<*>>
     abstract protected fun createScene(root: Parent): Scene
-    internal lateinit var instance: Component
+    internal lateinit var instance: Component<*>
 
     fun init() {
         // should we allow users to override this?
@@ -24,13 +25,11 @@ abstract class ZeroApp(val stage: Stage) {
             onClose(it)
         }
 
-        instance = main.primaryConstructor!!.call(this).apply {
-            init()
+        instance = create(main, null) {
             val root = when (template.root) {
                 is Parent -> template.root as Parent
                 else -> Group(template.root)
             }
-            contentInit()
             stage.scene = createScene(root)
         }
     }
@@ -46,6 +45,17 @@ abstract class ZeroApp(val stage: Stage) {
             destroy()
         } else {
             event.consume()
+        }
+    }
+
+    fun <T: Component<*>> create(klass: KClass<out T>, parent: Template?, attach: T.() -> Unit): T {
+        return klass.primaryConstructor!!.call(this).apply {
+            if (parent != null) {
+                parent.components.add(this)
+            }
+            attach(this)
+            template.init()
+            init()
         }
     }
 }

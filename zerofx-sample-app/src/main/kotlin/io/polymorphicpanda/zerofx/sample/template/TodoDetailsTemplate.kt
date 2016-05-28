@@ -1,9 +1,11 @@
 package io.polymorphicpanda.zerofx.sample.template
 
-import io.polymorphicpanda.zerofx.sample.component.TodoDetailsComponent
+import io.polymorphicpanda.zerofx.ZeroApp
 import io.polymorphicpanda.zerofx.sample.domain.Todo
 import io.polymorphicpanda.zerofx.template.Template
 import io.polymorphicpanda.zerofx.template.helpers.*
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ChangeListener
 import javafx.geometry.Pos
@@ -11,18 +13,19 @@ import javafx.geometry.Pos
 /**
  * @author Ranie Jade Ramiso
  */
-class TodoDetailsTemplate(component: TodoDetailsComponent,
-                          bindings: TodoDetailsComponent.Bindings)
-    : Template<TodoDetailsComponent, TodoDetailsComponent.Bindings>(component, bindings) {
+class TodoDetailsTemplate(app: ZeroApp): Template(app) {
     val listener = ChangeListener<Todo> { obs, old, todo ->
         if (todo != null) {
-            description.set(todo.description.get())
-            details.set(todo.details.get())
+            _description.set(todo.description.get())
+            _details.set(todo.details.get())
         }
     }
 
-    val description = SimpleStringProperty(this, "description")
-    val details = SimpleStringProperty(this, "details")
+    private val _todo = SimpleObjectProperty<Todo>(this, "todo")
+    fun todoProperty(): ObjectProperty<Todo> = _todo
+
+    private val _description = SimpleStringProperty(this, "description")
+    private val _details = SimpleStringProperty(this, "details")
 
     override val root by builder {
         stackPane {
@@ -30,13 +33,13 @@ class TodoDetailsTemplate(component: TodoDetailsComponent,
 
             vbox {
                 styleClass("content")
-                visibleProperty().bind(bindings.todoProperty().isNotNull)
+                visibleProperty().bind(_todo.isNotNull)
                 managedProperty().bind(visibleProperty())
                 spacing = 10.0
 
                 label {
                     styleClass("title")
-                    textProperty().bind(description)
+                    textProperty().bind(_description)
                 }
 
                 label {
@@ -54,7 +57,7 @@ class TodoDetailsTemplate(component: TodoDetailsComponent,
             vbox {
                 styleClass("empty")
                 alignment = Pos.CENTER
-                visibleProperty().bind(bindings.todoProperty().isNull)
+                visibleProperty().bind(_todo.isNull)
                 managedProperty().bind(visibleProperty())
 
                 label {
@@ -66,11 +69,11 @@ class TodoDetailsTemplate(component: TodoDetailsComponent,
 
     override fun init() {
         super.init()
-        bindings.todoProperty().addListener(listener)
+        _todo.addListener(listener)
     }
 
     override fun destroy() {
         super.destroy()
-        bindings.todoProperty().removeListener(listener)
+        _todo.removeListener(listener)
     }
 }
